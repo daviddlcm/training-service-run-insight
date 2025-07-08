@@ -1,50 +1,44 @@
-"use strict";
+const {DataTypes, Model} = require("sequelize")
+const sequelize = require("../configs/sequelize.config")
 
-/** @type {import('sequelize-cli').Migration} */
-module.exports = {
-  async up(queryInterface, Sequelize) {
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
-    await queryInterface.createTable("trainings", {
-      id: {
-        type: Sequelize.INTEGER.UNSIGNED,
+class Training extends Model {}
+
+Training.init({
+    id: {
+        type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
       },
       id_user: {
-        type: Sequelize.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
       },
       time_minutes: {
-        type: Sequelize.DOUBLE,
+        type: DataTypes.DOUBLE,
         allowNull: false,
       },
       distance_km: {
-        type: Sequelize.DOUBLE,
+        type: DataTypes.DOUBLE,
         allowNull: false,
       },
       rhythm: {
-        type: Sequelize.DOUBLE,
+        type: DataTypes.DOUBLE,
         allowNull: false,
       },
       date: {
-        type: Sequelize.DATE,
+        type: DataTypes.DATE,
         allowNull: false,
       },
       altitude: {
-        type: Sequelize.DOUBLE,
+        type: DataTypes.DOUBLE,
         allowNull: false,
       },
       notes: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: true,
       },
       id_weather: {
-        type: Sequelize.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
           model: "weathers",
@@ -54,7 +48,7 @@ module.exports = {
         onDelete: "CASCADE",
       },
       id_terrain_type: {
-        type: Sequelize.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
           model: "terrain_types",
@@ -64,7 +58,7 @@ module.exports = {
         onDelete: "CASCADE",
       },
       id_training_type: {
-        type: Sequelize.INTEGER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
           model: "training_types",
@@ -73,18 +67,13 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      createdAt: Sequelize.DATE,
-      updatedAt: Sequelize.DATE,
-    });
-  },
+      createdAt: DataTypes.DATE,
+      updatedAt: DataTypes.DATE,
+},{
+    sequelize,
+    modelName: "Training",
+    tableName: "trainings",
+    timestamps: true,
+})
 
-  async down(queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
-    await queryInterface.dropTable("trainings");
-  },
-};
+module.exports = Training
