@@ -54,12 +54,13 @@ const createTrainingService = async (idUser, training) => {
 
     return newTraining;
   } catch (error) {
-    console.error("Error creating training service:", error);
+    //console.error("Error creating training service:", error);
     throw error;
   }
 };
 
 const getTrainingByIdService = async (id) => {
+
   try {
     const training = await Training.findByPk(id, {
       include: [
@@ -68,6 +69,7 @@ const getTrainingByIdService = async (id) => {
         { model: Weather, as: "weather" },
       ],
     });
+    //console.log("Training found:", training);
 
     if (!training) {
       throw new Error("Training not found");
@@ -87,13 +89,21 @@ const getTrainingByIdService = async (id) => {
       id_user: training.id_user,
     };
   } catch (error) {
-    console.error("Error getting training by ID:", error);
+    //console.error("Error getting training by ID:", error);
     throw error;
   }
 };
 
 const getAllTrainingsByUserIdService = async (idUser) => {
-  try {
+  try { 
+
+    const userConfirm = await Training.findOne({
+      where: { id_user: idUser },
+    })
+    if (!userConfirm) {
+      throw new Error("User not found");
+    }
+
     const trainings = await Training.findAll({
       where: { id_user: idUser },
       include: [
@@ -120,7 +130,7 @@ const getAllTrainingsByUserIdService = async (idUser) => {
       weather: training.weather.name,
     }));
   } catch (error) {
-    console.error("Error getting all trainings by user ID:", error);
+    //console.error("Error getting all trainings by user ID:", error);
     throw error;
   }
 };
@@ -130,9 +140,14 @@ const getWeeklyDistanceService = async (idUser, weekMode =1 ) => {
     // if (!idUser) {
     //   throw new Error("User ID is required");
     // }
+    const userConfirm = await Training.findOne({
+      where: { id_user: idUser },
+    })
+    if (!userConfirm) {
+      throw new Error("User not found");
+    }
 
-    //const weekStart = startOfWeek === "monday" ? 1 : 0; // 1 for Monday, 0 for Sunday
-
+    
     const result = await Training.findOne({
       where: {
         id_user: idUser,
@@ -155,12 +170,13 @@ const getWeeklyDistanceService = async (idUser, weekMode =1 ) => {
           [sequelize.fn("AVG", sequelize.col("rhythm")), "avgRhythm"],
         ],
     });
+    //console.log(result)
     if (!result) {
       return {
         totalKm: 0,
         totalTrainings: 0,
         avgRhythm: 0,
-      };
+      }
     }
     return {
         totalKm: parseFloat(result.getDataValue("totalKm") || 0),
@@ -168,7 +184,7 @@ const getWeeklyDistanceService = async (idUser, weekMode =1 ) => {
         avgRhythm: parseFloat(result.getDataValue("avgRhythm") || 0),
     }
   } catch (error) {
-    console.error("Error getting weekly distance:", error);
+    //console.error("Error getting weekly distance:", error);
     throw error;
   }
 };

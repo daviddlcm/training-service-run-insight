@@ -30,18 +30,18 @@ const createTraining = async (req, res) => {
     console.error("Error creating training:", error);
     return res
       .status(500)
-      .json({ message: "Error creating training", success: false });
+      .json({ message: "Error creating training", success: false, error: error.message  });
   }
 };
 
 const getTrainingById = async (req, res) => {
   try {
     const idTraining = req.params.id;
-
+    //console.log("Getting training by ID:", idTraining);
     if (!idTraining) {
       return res
         .status(400)
-        .json({ message: "Training ID is required", success: false });
+        .json({ message: "Training ID is required", success: false, error: error.message  });
     }
 
     const training = await getTrainingByIdService(idTraining);
@@ -55,7 +55,10 @@ const getTrainingById = async (req, res) => {
     console.error("Error getting training by ID:", error);
     return res
       .status(500)
-      .json({ message: "Error getting training by ID", success: false });
+      .json({ message: "Error getting training by ID",
+         success: false,
+        error: error.message 
+      });
   }
 };
 
@@ -78,6 +81,7 @@ const getAllTrainingsByUserId = async (req, res) => {
     return res.status(500).json({
       message: "Error getting all trainings by user ID",
       success: false,
+      error: error.message 
     });
   }
 };
@@ -105,7 +109,7 @@ const getWeeklyDistance = async (req, res) => {
     console.error("Error getting weekly distance:", error);
     return res
       .status(500)
-      .json({ message: "Error getting weekly distance", success: false });
+      .json({ message: "Error getting weekly distance", success: false, error: error.message  });
   }
 };
 
