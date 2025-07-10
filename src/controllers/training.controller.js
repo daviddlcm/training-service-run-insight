@@ -94,7 +94,7 @@ const getWeeklyDistance = async (req, res) => {
         .status(400)
         .json({ message: "User ID is required", success: false });
     }
-
+    //console.log(idUser)
     const { totalKm, totalTrainings, avgRhythm } =
       await getWeeklyDistanceService(idUser);
 
