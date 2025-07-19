@@ -5,12 +5,19 @@ const app = express()
 const morgan = require("morgan")
 
 const PORT = process.env.PORT || 3002
+const env = process.env.NODE_ENV || 'development'
 
 const trainingRoutes = require("./src/routes/training.routes")
+const { verifyInternalToken } = require("./src/middlewares/connection.middleware")
 
-app.use(morgan("dev"))
+if (env === 'production') {
+  // No logs
+} else {
+  app.use(morgan('dev'));
+}
 app.use(express.json())
 
+app.use(verifyInternalToken)
 
 app.use("/trainings", trainingRoutes)
 
